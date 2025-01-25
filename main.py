@@ -2,6 +2,13 @@ import pygame
 from constants import *
 from sys import exit
 
+def display_time(): # A function to measure the length of time the player has been alive. We call this later to make it visible
+    current_time = pygame.time.get_ticks() - start_time # Sets the time. Start_time is defined below as the time since I ran the code
+    time_seconds = float(current_time/1000) # Converts milliseconds to seconds
+    time_surf = test_font.render(f"{time_seconds:.2f}", False, (64 ,64 ,64)) # Makes a surface for the timer
+    time_rect = time_surf.get_rect(center = (400,100)) # Applies it^ to a rectangle centered horizontally
+    screen.blit(time_surf, time_rect) # Prints to the screen
+
 pygame.init() # Necessary to initialize pygame and the code will not work without it
 
 # Have to create a display surface, the window the player sees. Stored as variable, usually screen
@@ -13,6 +20,7 @@ small_font = pygame.font.Font("font/Pixeltype.ttf", 30) # The same font but smal
 
 game_active = True # This determines if the game is running or there's a game over
 score = 0 # Sets the starting score. Needs to be done before making score_surf so the value is defined for the f string
+start_time = 0
 # Use a while True  loop to keep the game running, otherwise the game will close as soon as you open the program
 
 background_surf = pygame.image.load('graphics/Sky.png').convert() # Used to load the backround .png image
@@ -52,6 +60,7 @@ while True:
                 snail_rect.left = 800 # Moves the snail to undo any collision
                 score = 0 # Resets the score counter
                 game_active = True # Restarts the game
+                start_time = pygame.time.get_ticks()
 
 
 
@@ -61,10 +70,14 @@ while True:
         screen.blit(background_surf,(0, 0)) # Used 'identify' in the cli to find the size of the image
         screen.blit(ground_surf, (0, 300)) # Set the ground surface height to the end of the Sky image
         # Order here matters. Background surfaces first, foreground surfaces last
+        
+        
         pygame.draw.rect(screen, 'Yellow', text_rect) # This highlights the text by displaying a rectangle behind it
         # ^Inputs are (surface to print on, color, position)
         screen.blit(text_surf, (text_rect)) # Prints the text using the loaded font
         
+        display_time()
+
         snail_rect.x -= 4 # Moves the snail image to the left by 4 pixels each frame
         if snail_rect.right <= 0:
             score += 1 
