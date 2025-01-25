@@ -9,8 +9,10 @@ pygame.init() # Necessary to initialize pygame and the code will not work withou
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT)) # Sets the size of the window the game runs in
 clock = pygame.time.Clock() # Creates a clock instance which allows us to control framerate
 test_font = pygame.font.Font('font/Pixeltype.ttf', 50) # To write text we need a font. This selects a font and size
+small_font = pygame.font.Font("font/Pixeltype.ttf", 30) # The same font but smaller, used in game over screen
 
 game_active = True # This determines if the game is running or there's a game over
+score = 0 # Sets the starting score. Needs to be done before making score_surf so the value is defined for the f string
 # Use a while True  loop to keep the game running, otherwise the game will close as soon as you open the program
 
 background_surf = pygame.image.load('graphics/Sky.png').convert() # Used to load the backround .png image
@@ -18,6 +20,10 @@ ground_surf = pygame.image.load('graphics/ground.png').convert() # Same method l
 
 text_surf = test_font.render('Jump the Snail', False, 'Green') # Generates text:('text', anti-aliasing bool, color)
 text_rect = text_surf.get_rect(center = (400, 50)) # Appiles the text to a rectangle for easy positioning
+game_over_surf_1 = test_font.render("Game Over", False, "Red") # Sets text for a game over
+game_over_rect_1 = game_over_surf_1.get_rect(center = (400, 50)) # Applies a rectangle that's centered vertically
+game_over_surf_2 = small_font.render("Press Space to Try Again", False, "Black")
+game_over_rect_2 = game_over_surf_2.get_rect(center = (400, 200))
 
 snail_surf = pygame.image.load('graphics/snail/snail1.png').convert_alpha() # .convert() and .convert_alpha() are both used to improve performance
 # .converrt_alpha() removes the checkered pattern behind an image. Sky and ground don't have that, so no alpha.
@@ -44,6 +50,7 @@ while True:
         else: # Cancels out the 'if game_active' line above to account for a game over
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE: # Detects if a key is pressed and if it's space
                 snail_rect.left = 800 # Moves the snail to undo any collision
+                score = 0 # Resets the score counter
                 game_active = True # Restarts the game
 
 
@@ -54,12 +61,14 @@ while True:
         screen.blit(background_surf,(0, 0)) # Used 'identify' in the cli to find the size of the image
         screen.blit(ground_surf, (0, 300)) # Set the ground surface height to the end of the Sky image
         # Order here matters. Background surfaces first, foreground surfaces last
-        pygame.draw.rect(screen, 'Pink', text_rect) # This highlights the text by displaying a rectangle behind it
+        pygame.draw.rect(screen, 'Yellow', text_rect) # This highlights the text by displaying a rectangle behind it
         # ^Inputs are (surface to print on, color, position)
         screen.blit(text_surf, (text_rect)) # Prints the text using the loaded font
         
         snail_rect.x -= 4 # Moves the snail image to the left by 4 pixels each frame
-        if snail_rect.right <= 0: snail_rect.left = 800 # If the right side of the snail leaves the screen, redraw it @ 800px
+        if snail_rect.right <= 0:
+            score += 1 
+            snail_rect.left = 800 # If the right side of the snail leaves the screen, redraw it @ 800px
         screen.blit(snail_surf, (snail_rect)) # Draws the snail over the snail_rect whose position is dictated above
         
         #player
@@ -67,7 +76,10 @@ while True:
         player_gravity += 1 # ... and the value of gravity is increased. This is a basic approximation of physics (no terminal velocity).
         if player_rect.bottom >= 300: # If the player hits the ground too hard and goes below the floor...
             player_rect.bottom = 300 # ... then their y position is reset to 300. This creates a floor of 300 px.
-        screen.blit(player_surf, (player_rect)) # When creating a rect you can define the initial position in the rect 
+        screen.blit(player_surf, (player_rect)) # When creating a rect you can define the initial position in the rect
+        score_surf = small_font.render(f"Score: {score}", False, "Black")
+        score_rect = score_surf.get_rect(left = 650, top = 25)
+        screen.blit(score_surf, score_rect)
 
 
     # To learn about mouse clicking, visit https://youtu.be/AY9MnQ4x3zk?si=0HqP7H9ExS0Q9Gjy&t=3998, also @ 1:42:00
@@ -76,6 +88,8 @@ while True:
 
     else: # Sets the game over conditions
         screen.fill('Yellow')
+        screen.blit(game_over_surf_1, game_over_rect_1)
+        screen.blit(game_over_surf_2, game_over_rect_2)
         
     pygame.display.update() # updates the the screen display surface. Call it and forget about it
     clock.tick(60) # Sets the *maximum* framerate to 60 fps
