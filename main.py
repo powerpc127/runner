@@ -33,10 +33,11 @@ while True:
             exit() # Runs sys.exit() to prevent the game logic from continuing to try to run
         
     # Input (still in while loop)    
-        if event.type == pygame.KEYDOWN: # Detects if button is pressed
-            if event.key == pygame.K_UP: # Detects if up arrow is pressed. Full button list here: https://www.pygame.org/docs/ref/key.html#key-constants-label
+        if event.type == pygame.KEYDOWN: # Detects if button is pressed. Full button list here: https://www.pygame.org/docs/ref/key.html#key-constants-label
+            if event.key == pygame.K_UP and player_rect.bottom == 300: # Detects if up arrow is pressed and if we are on the ground.
                 player_gravity = -15
                 player_rect.y -= 1
+
 
 
 # Here we draw all our elements and update everything
@@ -54,7 +55,7 @@ while True:
     screen.blit(snail_surface, (snail_rect)) # Draws the snail over the snail_rect whose position is dictated above
     
     #player
-    if player_rect.bottom > 300: # If the player hits the ground too hard and goes below the floor...
+    if player_rect.bottom >= 300: # If the player hits the ground too hard and goes below the floor...
         player_rect.bottom = 300 # ... then their y position is reset to 300. This creates a floor of 300 px.
     if player_rect.bottom < 300: # If the player is above the ground...
         player_rect.y += player_gravity # ... they move down by their current gravity value of pixels...
@@ -62,7 +63,7 @@ while True:
     screen.blit(player_surface, (player_rect)) # When creating a rect you can define the initial position in the rect 
 
 
-# To learn about mouse clicking, visit https://youtu.be/AY9MnQ4x3zk?si=0HqP7H9ExS0Q9Gjy&t=3998
+# To learn about mouse clicking, visit https://youtu.be/AY9MnQ4x3zk?si=0HqP7H9ExS0Q9Gjy&t=3998, also @ 1:42:00
     if player_rect.colliderect(snail_rect):
         print('collision')
 
