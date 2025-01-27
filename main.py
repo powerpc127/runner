@@ -8,6 +8,7 @@ def display_time(): # A function to measure the length of time the player has be
     time_surf = test_font.render(f"{time_seconds:.2f}", False, (64 ,64 ,64)) # Makes a surface for the timer
     time_rect = time_surf.get_rect(center = (400,100)) # Applies it^ to a rectangle centered horizontally
     screen.blit(time_surf, time_rect) # Prints to the screen
+    return time_seconds
 
 pygame.init() # Necessary to initialize pygame and the code will not work without it
 
@@ -32,6 +33,10 @@ game_over_surf_1 = test_font.render("Game Over", False, (0, 200, 200)) # Sets te
 game_over_rect_1 = game_over_surf_1.get_rect(center = (400, 100)) # Applies a rectangle that's centered vertically
 game_over_surf_2 = small_font.render("Press Space to Try Again", False, (0, 200, 200))
 game_over_rect_2 = game_over_surf_2.get_rect(center = (400, 300))
+game_over_score_surf = test_font.render(f"Score: {final_score}", False, (0, 200, 200))
+game_over_score_rect = game_over_score_surf.get_rect(midleft = (100, 133))
+game_over_time_surf = test_font.render(f"Time: {final_time}", False, (0, 200, 200))
+game_over_time_rect = game_over_time_surf.get_rect(midright = (700, 133))
 
 snail_surf = pygame.image.load('graphics/snail/snail1.png').convert_alpha() # .convert() and .convert_alpha() are both used to improve performance
 # .converrt_alpha() removes the checkered pattern behind an image. Sky and ground don't have that, so no alpha.
@@ -103,6 +108,10 @@ while True:
             final_score = score
             current_time = pygame.time.get_ticks() - start_time
             final_time = float(current_time/1000)
+            game_over_score_surf = test_font.render(f"Score: {final_score}", False, (0, 200, 200))
+            game_over_score_rect = game_over_score_surf.get_rect(left = (100, 50))
+            game_over_time_surf = test_font.render(f"Time: {final_time}", False, (0, 200, 200))
+            game_over_time_rect = game_over_time_surf.get_rect(left = (200, 50))    
             game_active = False
 
     else: # Sets the game over conditions
@@ -110,6 +119,8 @@ while True:
         screen.blit(game_over_surf_1, game_over_rect_1)
         screen.blit(game_over_surf_2, game_over_rect_2)
         screen.blit(player_stand, player_stand_rect)
+        screen.blit(game_over_score_surf, game_over_score_rect)
+        screen.blit(game_over_time_surf, game_over_time_rect)
         
     pygame.display.update() # updates the the screen display surface. Call it and forget about it
     clock.tick(60) # Sets the *maximum* framerate to 60 fps
