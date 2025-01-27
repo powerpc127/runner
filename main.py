@@ -25,6 +25,18 @@ def obstacle_movement(obstacle_list):
     else:
         return []
 
+def player_animation():
+    global player_surf, player_index
+    if player_rect.bottom < 300:
+        player_surf = player_jump # Jump conditions
+    else:
+        player_index += 0.1
+        if int(player_index) >= len(player_walk):player_index = 0
+        player_surf = player_walk[int(player_index)]
+
+    #play walking animation if player on floor
+    #display jump surface when player not on floor
+
 pygame.init() # Necessary to initialize pygame and the code will not work without it
 
 # Have to create a display surface, the window the player sees. Stored as variable, usually screen
@@ -62,8 +74,14 @@ snail_surf = pygame.image.load('graphics/snail/snail1.png').convert_alpha() # .c
 fly_surf = pygame.image.load("graphics/Fly/Fly1.png").convert_alpha()
 
 # player images
-player_surf = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
+player_walk_1 = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
+player_walk_2 = pygame.image.load('graphics/Player/player_walk_2.png').convert_alpha() # This and ^that line represent a walking animation
+player_walk = [player_walk_1, player_walk_2]
+player_index = 0
+player_surf = player_walk[player_index]
 player_rect = player_surf.get_rect(midbottom = (80, 300)) # Draws the player rectangle on the floor (300 px)
+player_jump = pygame.image.load("graphics/Player/jump.png").convert_alpha()
+player_index = 0
 player_gravity = 0 # This will be overwritten later
 player_stand = pygame.image.load("graphics/Player/player_stand.png").convert_alpha()
 player_stand = pygame.transform.rotozoom(player_stand, 0,2)
@@ -116,13 +134,14 @@ while True:
         # ^Inputs are (surface to print on, color, position)
         screen.blit(text_surf, (text_rect)) # Prints the text using the loaded font
         
-        display_time()
+        display_time() # Prints a timer to the screen
 
         #player
         player_rect.y += player_gravity # The player will move down by their current gravity value of pixels...
         player_gravity += 1 # ... and the value of gravity is increased. This is a basic approximation of physics (no terminal velocity).
         if player_rect.bottom >= 300: # If the player hits the ground too hard and goes below the floor...
             player_rect.bottom = 300 # ... then their y position is reset to 300. This creates a floor of 300 px.
+        player_animation() # Runs the logic that determines what player_surf below will be
         screen.blit(player_surf, (player_rect)) # When creating a rect you can define the initial position in the rect
         score_surf = small_font.render(f"Score: {score}", False, "Black")
         score_rect = score_surf.get_rect(left = 650, top = 25)
