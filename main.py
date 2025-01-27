@@ -24,6 +24,15 @@ def obstacle_movement(obstacle_list):
         return obstacle_list
     else:
         return []
+    
+def player_animation():
+    global player_surf, player_index
+    if player_rect.bottom < 300:
+        player_surf = player_jump
+    else:
+        player_index += 0.1
+        if int(player_index) == 2: player_index = 0
+        player_surf = player_walk[int(player_index)]
 
 pygame.init() # Necessary to initialize pygame and the code will not work without it
 
@@ -57,13 +66,30 @@ new_game_surf_2 = small_font.render("Press Space to Start", False, (0, 200, 200)
 new_game_rect_2 = game_over_surf_2.get_rect(midleft = (305, 300))
 
 # Obstacles
-snail_surf = pygame.image.load('graphics/snail/snail1.png').convert_alpha() # .convert() and .convert_alpha() are both used to improve performance
-# .converrt_alpha() removes the checkered pattern behind an image. Sky and ground don't have that, so no alpha.
-fly_surf = pygame.image.load("graphics/Fly/Fly1.png").convert_alpha()
+# .convert() and .convert_alpha() are both used to improve performance
+# .convert_alpha() removes the checkered pattern behind an image. Sky and ground don't have that, so no alpha.
+snail_frame_1 = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
+snail_frame_2 = pygame.image.load("graphics/snail/snail2.png").convert_alpha()
+snail_frame_index = 0
+snail_frames = [snail_frame_1, snail_frame_2]
+snail_surf = snail_frames[snail_frame_index]
+
+fly_frame_1 = pygame.image.load("graphics/Fly/Fly1.png")
+fly_frame_2 = pygame.image.load("graphics/Fly/Fly2.png")
+fly_frame_index = 0
+fly_frames = [fly_frame_1, fly_frame_2]
+fly_surf = fly_frames[fly_frame_index]
 
 # player images
-player_surf = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
+player_walk_1 = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
+player_walk_2 = pygame.image.load('graphics/Player/player_walk_2.png').convert_alpha()
+player_walk = [player_walk_1, player_walk_2]
+player_index = 0
+player_jump = pygame.image.load("graphics/Player/jump.png").convert_alpha()
+
+player_surf = player_walk[player_index]
 player_rect = player_surf.get_rect(midbottom = (80, 300)) # Draws the player rectangle on the floor (300 px)
+
 player_gravity = 0 # This will be overwritten later
 player_stand = pygame.image.load("graphics/Player/player_stand.png").convert_alpha()
 player_stand = pygame.transform.rotozoom(player_stand, 0,2)
@@ -74,6 +100,11 @@ obstacle_timer = pygame.USEREVENT + 1 # Userevent is a self defined event. Howev
 # for its own mechanics. Therefore we set obstacle_timer to userevent+1
 pygame.time.set_timer(obstacle_timer, 1500) # Defining the event to make something operate a timer
 
+snail_animation_timer = pygame.USEREVENT + 2
+pygame.time.set_timer(snail_animation_timer, 500)
+
+fly_animation_timer = pygame.USEREVENT + 3
+pygame.time.set_timer(fly_animation_timer, 200)
 # Use a while True  loop to keep the game running, otherwise the game will close as soon as you open the program
 
 while True:
@@ -95,6 +126,16 @@ while True:
                     obstacle_rect_list.append(snail_surf.get_rect(bottomright = (randint(900, 1100), 300)))
                 else:
                     obstacle_rect_list.append(fly_surf.get_rect(bottomright = (randint(900, 1100), 210)))
+            
+            if event.type == snail_animation_timer:
+                if snail_frame_index == 0: snail_frame_index = 1
+                else: snail_frame_index = 0
+                snail_surf = snail_frames[snail_frame_index]
+
+            if event.type == fly_animation_timer:
+                if fly_frame_index == 0: fly_frame_index = 1
+                else: fly_frame_index = 0
+                fly_surf = fly_frames[fly_frame_index]
 
         else: # Cancels out the 'if game_active' line above to account for a game over
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE: # Detects if a key is pressed and if it's space
@@ -123,6 +164,7 @@ while True:
         player_gravity += 1 # ... and the value of gravity is increased. This is a basic approximation of physics (no terminal velocity).
         if player_rect.bottom >= 300: # If the player hits the ground too hard and goes below the floor...
             player_rect.bottom = 300 # ... then their y position is reset to 300. This creates a floor of 300 px.
+        player_animation()
         screen.blit(player_surf, (player_rect)) # When creating a rect you can define the initial position in the rect
         score_surf = small_font.render(f"Score: {score}", False, "Black")
         score_rect = score_surf.get_rect(left = 650, top = 25)
