@@ -16,7 +16,8 @@ def obstacle_movement(obstacle_list):
     if obstacle_list:
         for obstacle_rect in obstacle_list:
             obstacle_rect.x -= 5
-            screen.blit(snail_surf,obstacle_rect)
+            if obstacle_rect.bottom == 300: screen.blit(snail_surf, obstacle_rect)
+            if obstacle_rect.bottom == 210: screen.blit(fly_surf, obstacle_rect)
             if obstacle_rect.x <= -72:
                 del obstacle_list[0]
                 score += 1
@@ -58,9 +59,7 @@ new_game_rect_2 = game_over_surf_2.get_rect(midleft = (305, 300))
 # Obstacles
 snail_surf = pygame.image.load('graphics/snail/snail1.png').convert_alpha() # .convert() and .convert_alpha() are both used to improve performance
 # .converrt_alpha() removes the checkered pattern behind an image. Sky and ground don't have that, so no alpha.
-snail_rect = snail_surf.get_rect(bottomleft = (800, 300))
-fly_surf = pygame.image.load("graphics/fly/fly1.png").convert_alpha()
-fly_rect = fly_surf.get_rect(bottomleft = (800, 300))
+fly_surf = pygame.image.load("graphics/Fly/Fly1.png").convert_alpha()
 
 # player images
 player_surf = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
@@ -87,16 +86,18 @@ while True:
     # Input (still in while loop)   
         if game_active: 
             if event.type == pygame.KEYDOWN: # Detects if button is pressed. Full button list here: https://www.pygame.org/docs/ref/key.html#key-constants-label
-                if event.key == pygame.K_SPACE and player_rect.bottom >= 300: # Detects if up arrow is pressed and if we are on the ground
+                if event.key == pygame.K_UP and player_rect.bottom >= 300: # Detects if up arrow is pressed and if we are on the ground
                     player_gravity = -20
                     player_rect.y -= 1 # This changes our height by 1 so that we don't meet the criteria for being on the floor and can move
             
             if event.type == obstacle_timer:
-                obstacle_rect_list.append(snail_surf.get_rect(bottomright = (randint(900, 1100), 300)))
+                if randint(0,2):
+                    obstacle_rect_list.append(snail_surf.get_rect(bottomright = (randint(900, 1100), 300)))
+                else:
+                    obstacle_rect_list.append(fly_surf.get_rect(bottomright = (randint(900, 1100), 210)))
 
         else: # Cancels out the 'if game_active' line above to account for a game over
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE: # Detects if a key is pressed and if it's space
-                snail_rect.left = 800 # Moves the snail to undo any collision
                 score = 0 # Resets the score counter
                 game_active = True # Restarts the game
                 start_time = pygame.time.get_ticks()
