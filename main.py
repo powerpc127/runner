@@ -18,7 +18,7 @@ clock = pygame.time.Clock() # Creates a clock instance which allows us to contro
 test_font = pygame.font.Font('font/Pixeltype.ttf', 50) # To write text we need a font. This selects a font and size
 small_font = pygame.font.Font("font/Pixeltype.ttf", 30) # The same font but smaller, used in game over screen
 
-game_active = True # This determines if the game is running or there's a game over
+game_active = False # This determines if the game is running or there's a game over
 score = 0 # Sets the starting score. Needs to be done before making score_surf so the value is defined for the f string
 start_time = 0
 # Use a while True  loop to keep the game running, otherwise the game will close as soon as you open the program
@@ -28,10 +28,14 @@ ground_surf = pygame.image.load('graphics/ground.png').convert() # Same method l
 
 text_surf = test_font.render('Jump the Snail', False, 'Green') # Generates text:('text', anti-aliasing bool, color)
 text_rect = text_surf.get_rect(center = (400, 50)) # Appiles the text to a rectangle for easy positioning
-game_over_surf_1 = test_font.render("Game Over", False, "Red") # Sets text for a game over
-game_over_rect_1 = game_over_surf_1.get_rect(center = (400, 50)) # Applies a rectangle that's centered vertically
-game_over_surf_2 = small_font.render("Press Space to Try Again", False, "Black")
-game_over_rect_2 = game_over_surf_2.get_rect(center = (400, 200))
+game_over_surf_1 = test_font.render("Game Over", False, (0, 200, 200)) # Sets text for a game over
+game_over_rect_1 = game_over_surf_1.get_rect(center = (400, 100)) # Applies a rectangle that's centered vertically
+game_over_surf_2 = small_font.render("Press Space to Try Again", False, (0, 200, 200))
+game_over_rect_2 = game_over_surf_2.get_rect(center = (400, 300))
+game_over_score_surf = test_font.render(f"Score: {final_score}", False, (0, 200, 200))
+game_over_score_rect = game_over_score_surf.get_rect(midleft = (100, 133))
+game_over_time_surf = test_font.render(f"Time: {final_time}", False, (0, 200, 200))
+game_over_time_rect = game_over_time_surf.get_rect(midright = (700, 133))
 
 snail_surf = pygame.image.load('graphics/snail/snail1.png').convert_alpha() # .convert() and .convert_alpha() are both used to improve performance
 # .converrt_alpha() removes the checkered pattern behind an image. Sky and ground don't have that, so no alpha.
@@ -40,6 +44,9 @@ snail_rect = snail_surf.get_rect(bottomleft = (800, 300))
 player_surf = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
 player_rect = player_surf.get_rect(midbottom = (80, 300)) # Draws the player rectangle on the floor (300 px)
 player_gravity = 0 # This will be overwritten later
+player_stand = pygame.image.load("graphics/Player/player_stand.png").convert_alpha()
+player_stand = pygame.transform.rotozoom(player_stand, 0,2)
+player_stand_rect = player_stand.get_rect(center = (400, 200))
 
 while True:
     # Allow for the game to quit
@@ -97,12 +104,22 @@ while True:
 
     # To learn about mouse clicking, visit https://youtu.be/AY9MnQ4x3zk?si=0HqP7H9ExS0Q9Gjy&t=3998, also @ 1:42:00
         if player_rect.colliderect(snail_rect):
+            final_score = score
+            current_time = pygame.time.get_ticks() - start_time
+            final_time = float(current_time/1000)
+            game_over_score_surf = test_font.render(f"Score: {final_score}", False, (0, 200, 200))
+            game_over_score_rect = game_over_score_surf.get_rect(left = (100, 50))
+            game_over_time_surf = test_font.render(f"Time: {final_time}", False, (0, 200, 200))
+            game_over_time_rect = game_over_time_surf.get_rect(left = (200, 50))    
             game_active = False
 
     else: # Sets the game over conditions
-        screen.fill('Yellow')
+        screen.fill((94,129,162))
         screen.blit(game_over_surf_1, game_over_rect_1)
         screen.blit(game_over_surf_2, game_over_rect_2)
+        screen.blit(player_stand, player_stand_rect)
+        screen.blit(game_over_score_surf, game_over_score_rect)
+        screen.blit(game_over_time_surf, game_over_time_rect)
         
     pygame.display.update() # updates the the screen display surface. Call it and forget about it
     clock.tick(60) # Sets the *maximum* framerate to 60 fps
