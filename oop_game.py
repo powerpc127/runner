@@ -27,11 +27,17 @@ while True:
         if event.type == pygame.KEYDOWN: # Checking for KEYDOWN avoids double jumping
             if event.key == pygame.K_UP and player.position[1] == FLOOR:
                 player.jump()        
-        
+
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT:
+                player.moving_left = False    
+    
     if keys[pygame.K_LEFT]:
         player.move_left()
     if keys[pygame.K_RIGHT]:
         player.move_right()
+    
+
     
 
     pygame.display.update()

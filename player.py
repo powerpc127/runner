@@ -28,25 +28,27 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.surf.get_rect(bottomleft = (self.position)) # Rectangle to blit in draw
 
         self.gravity = 0
-
+        self.moving_left = False
+    
     def jump(self):
         self.gravity = -20
 
     def move_left(self):
         self.position[0] -= 5
-
+        self.moving_left = True
 
     def move_right(self):
         self.position[0] += 5
-
+        self.walk_index += 0.05
 
     def animate(self):
         self.walk_index += 0.1
         self.gravity += 1
         self.position[1] += self.gravity
-        if self.position[1] > FLOOR: self.position[1] = FLOOR
-        if int(self.walk_index) == 2: self.walk_index = 0
-        if self.position[1] < FLOOR: self.surf = self.jumps
+        if self.position[1] > FLOOR: self.position[1] = FLOOR # Makes the lowest fall height
+        if int(self.walk_index) == 2: self.walk_index = 0 
+        if self.position[1] < FLOOR: self.surf = self.jumps # If airborne plays the jump image
+        elif self.moving_left: self.surf = self.stand
         else: self.surf = self.walk[int(self.walk_index)]
         self.rect.bottomleft = self.position
 
