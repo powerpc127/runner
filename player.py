@@ -36,14 +36,14 @@ class Player(pygame.sprite.Sprite):
 
     def move_left(self):
         if self.position[0] > 0:
-            self.position[0] -= 5
+            self.position[0] -= 4
             self.moving_left = True
         else:
             self.moving_left = False
 
     def move_right(self):
         if self.rect.right < SCREEN_WIDTH:
-            self.position[0] += 5
+            self.position[0] += 4
             self.walk_index += 0.2
             self.moving_right = True
         else:
