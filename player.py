@@ -8,10 +8,8 @@ clock = pygame.time.Clock()
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x=100, y=100):
         super().__init__()
-        self.x = x
-        self.y = y
         self.position = (x, y)
 
         # Assigning all the images including two for a walk animation
@@ -27,32 +25,35 @@ class Player(pygame.sprite.Sprite):
         self.walk_index = 0
 
         self.surf = self.walk1 # Starting surface to override later
-        self.rect = self.surf.get_rect(bottomleft = (x, y)) # Rectangle to blit in draw
+        self.rect = self.surf.get_rect(bottomleft = (self.position)) # Rectangle to blit in draw
 
         self.gravity = 0
-        if self.y < 300:
-            self.gravity += 1
-            self.y += self.gravity
-        else:
-            self.y = 300
-
-    #def update():
-
-    def draw(self, surface):
-        surface.blit(self.surf, self.rect)
 
     def jump(self):
         self.gravity = -20
-        self.y = 299
-        if self.y < 300:
-            self.surf = self.jumps
-        print(self.gravity)
+        self.position = (self.position[0], (FLOOR - 1))
+
+    def move_left(self):
+        self.position = ((self.position[0] - 5), self.position[1])
+
+    def move_right(self):
+        self.position = ((self.position[0] + 5), self.position[1])
 
     def animate(self):
         self.walk_index += 0.1
+        self.gravity += 1
+        self.position = (self.position[0], (self.position[1] + self.gravity))
+        if self.position[1] > FLOOR: self.position = (self.position[0], FLOOR)
         if int(self.walk_index) == 2: self.walk_index = 0
-        self.surf = self.walk[int(self.walk_index)]
+        if self.position[1] < FLOOR: self.surf = self.jumps
+        else: self.surf = self.walk[int(self.walk_index)]
+        self.rect.bottomleft = self.position
+
+    def draw(self, screen):
+        screen.blit(self.surf, self.rect)
+
         
     pygame.display.update()
     clock.tick(60)
     #def collide():
+
