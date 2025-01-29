@@ -18,18 +18,17 @@ while True:
     background.draw(screen)
     player.animate()
     player.draw(screen)
+    keys = pygame.key.get_pressed()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
         
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                player.jump()
-            if event.key == pygame.K_LEFT:
-                player.move_left()
-            if event.key == pygame.K_RIGHT:
-                player.move_right()
+        if event.type == pygame.KEYDOWN: # Checking for KEYDOWN avoids double jumping
+            if event.key == pygame.K_UP and player.position[1] == FLOOR:
+                player.jump()        
+            if event.key == pygame.K_LEFT: player.move_left()
+            if event.key == pygame.K_RIGHT: player.move_right()
 
     pygame.display.update()
     clock.tick(60)

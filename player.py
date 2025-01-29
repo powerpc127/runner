@@ -8,8 +8,10 @@ clock = pygame.time.Clock()
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x=100, y=100):
+    def __init__(self, x=100, y=FLOOR):
         super().__init__()
+        self.x = x
+        self.y = y
         self.position = (x, y)
 
         # Assigning all the images including two for a walk animation
@@ -31,13 +33,14 @@ class Player(pygame.sprite.Sprite):
 
     def jump(self):
         self.gravity = -20
-        self.position = (self.position[0], (FLOOR - 1))
 
     def move_left(self):
-        self.position = ((self.position[0] - 5), self.position[1])
+        self.x -= 5
+
 
     def move_right(self):
-        self.position = ((self.position[0] + 5), self.position[1])
+        self.x += 5
+
 
     def animate(self):
         self.walk_index += 0.1
