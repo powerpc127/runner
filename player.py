@@ -34,12 +34,17 @@ class Player(pygame.sprite.Sprite):
         self.gravity = -20
 
     def move_left(self):
-        self.position[0] -= 5
-        self.moving_left = True
+        if self.position[0] > 0:
+            self.position[0] -= 5
+            self.moving_left = True
+        else:
+            self.moving_left = False
 
     def move_right(self):
-        self.position[0] += 5
-        self.walk_index += 0.05
+        if self.rect.right < SCREEN_WIDTH:
+            self.position[0] += 5
+            self.walk_index += 0.2
+        else: pass
 
     def animate(self):
         self.walk_index += 0.1
@@ -47,7 +52,10 @@ class Player(pygame.sprite.Sprite):
         self.position[1] += self.gravity
         if self.position[1] > FLOOR: self.position[1] = FLOOR # Makes the lowest fall height
         if int(self.walk_index) == 2: self.walk_index = 0 
-        if self.position[1] < FLOOR: self.surf = self.jumps # If airborne plays the jump image
+        if self.position[1] < FLOOR:
+            self.surf = self.jumps # If airborne plays the jump image
+        elif self.position[0] == 0:
+            self.surf = self.walk[int(self.walk_index)]
         elif self.moving_left: self.surf = self.stand
         else: self.surf = self.walk[int(self.walk_index)]
         self.rect.bottomleft = self.position

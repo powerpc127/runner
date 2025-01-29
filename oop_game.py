@@ -19,6 +19,7 @@ while True:
     player.animate()
     player.draw(screen)
     keys = pygame.key.get_pressed()
+    print(player.moving_left)
     if keys[pygame.K_LEFT]:
         player.move_left()
     if keys[pygame.K_RIGHT]:
