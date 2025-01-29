@@ -19,6 +19,10 @@ while True:
     player.animate()
     player.draw(screen)
     keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT]:
+        player.move_left()
+    if keys[pygame.K_RIGHT]:
+        player.move_right()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -32,10 +36,6 @@ while True:
             if event.key == pygame.K_LEFT:
                 player.moving_left = False    
     
-    if keys[pygame.K_LEFT]:
-        player.move_left()
-    if keys[pygame.K_RIGHT]:
-        player.move_right()
     
 
     
