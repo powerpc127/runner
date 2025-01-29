@@ -29,6 +29,7 @@ class Player(pygame.sprite.Sprite):
 
         self.gravity = 0
         self.moving_left = False
+        self.moving_right = False
     
     def jump(self):
         self.gravity = -20
@@ -44,7 +45,9 @@ class Player(pygame.sprite.Sprite):
         if self.rect.right < SCREEN_WIDTH:
             self.position[0] += 5
             self.walk_index += 0.2
-        else: pass
+            self.moving_right = True
+        else:
+            self.moving_right = False
 
     def animate(self):
         self.walk_index += 0.1
