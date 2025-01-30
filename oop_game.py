@@ -10,7 +10,7 @@ pygame.init()
 
 player = Player()
 snail = Snail(500,)
-fly = Fly(200, )
+fly = Fly(300,)
 background = Background()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
@@ -39,6 +39,8 @@ while True:
         if event.type == pygame.KEYDOWN: # Checking for KEYDOWN avoids double jumping
             if event.key == pygame.K_UP and player.position[1] == FLOOR:
                 player.jump()        
+            if event.key == pygame.K_q:
+                player.draw_hitbox()
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:

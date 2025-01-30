@@ -11,7 +11,11 @@ class Snail():
         self.glide1 = pygame.image.load("graphics/snail/snail1.png")
         self.glide2 = pygame.image.load("graphics/snail/snail2.png")
 
+        self.mask1 = pygame.mask.from_surface(self.glide1)
+        self.mask2 = pygame.mask.from_surface(self.glide2)
+
         self.glide = [self.glide1, self.glide2]
+        self.masks = [self.mask1, self.mask2]
         self.glide_index = 0
         
         self.surf = self.glide1
@@ -21,6 +25,7 @@ class Snail():
         self.glide_index += 0.05
         if int(self.glide_index) == 2: self.glide_index = 0
         self.surf = self.glide[int(self.glide_index)]
+        self.mask = self.masks[int(self.glide_index)]
 
     def draw(self, screen):
         screen.blit(self.surf, self.rect)
@@ -31,7 +36,11 @@ class Fly():
         self.fly1 = pygame.image.load("graphics/Fly/Fly1.png")
         self.fly2 = pygame.image.load("graphics/Fly/Fly2.png")
 
+        self.mask1 = pygame.mask.from_surface(self.fly1)
+        self.mask2 = pygame.mask.from_surface(self.fly2)
+
         self.fly = [self.fly1, self.fly2]
+        self.masks = [self.mask1, self.mask2]
         self.fly_index = 0
         
         self.surf = self.fly1

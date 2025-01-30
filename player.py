@@ -17,6 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.walk2 = pygame.image.load("graphics/Player/player_walk_2.png").convert_alpha()
         self.jumps = pygame.image.load("graphics/Player/jump.png").convert_alpha()
         self.stand = pygame.image.load("graphics/Player/player_stand.png").convert_alpha()
+        self.hitbox = False
         
         # Setting the two frames of walk animation as a list
         self.walk = [self.walk1, self.walk2]
@@ -62,12 +63,19 @@ class Player(pygame.sprite.Sprite):
         elif self.moving_left: self.surf = self.stand
         else: self.surf = self.walk[int(self.walk_index)]
         self.rect.bottomleft = self.position
+    
+    def draw_hitbox(self):
+        if self.hitbox: self.hitbox = False
+        else: self.hitbox = True
 
     def draw(self, screen):
         screen.blit(self.surf, self.rect)
+        if self.hitbox: pygame.draw.rect(screen,"Red", self.rect, 2)
+
 
         
     pygame.display.update()
     clock.tick(60)
-    #def collide():
+    #def collide(self):
+
 
