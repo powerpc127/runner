@@ -72,10 +72,10 @@ class Player(pygame.sprite.Sprite):
         screen.blit(self.surf, self.rect)
         if self.hitbox: pygame.draw.rect(screen,"Red", self.rect, 2)
 
-
+    def collide(self):
+        pass
         
     pygame.display.update()
     clock.tick(60)
-    #def collide(self):
 
 

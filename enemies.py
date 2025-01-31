@@ -4,10 +4,20 @@ from constants import *
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-
-class Snail():
-    def __init__(self, x=SCREEN_WIDTH, y=FLOOR):
+class Enemy():
+    def __init__(self, x, y):
         self.position = [x, y]
+        self.surf = ""
+        self.rect = ""
+
+
+    def draw(self, screen):
+        screen.blit(self.surf, self.rect)
+
+
+class Snail(Enemy):
+    def __init__(self, x, y=FLOOR):
+        super().__init__(x, y)
         self.glide1 = pygame.image.load("graphics/snail/snail1.png")
         self.glide2 = pygame.image.load("graphics/snail/snail2.png")
 
@@ -27,12 +37,10 @@ class Snail():
         self.surf = self.glide[int(self.glide_index)]
         self.mask = self.masks[int(self.glide_index)]
 
-    def draw(self, screen):
-        screen.blit(self.surf, self.rect)
 
-class Fly():
-    def __init__(self, x=SCREEN_WIDTH, y=100):
-        self.position = [x, y]
+class Fly(Enemy):
+    def __init__(self, x, y=100):
+        super().__init__(x, y)
         self.fly1 = pygame.image.load("graphics/Fly/Fly1.png")
         self.fly2 = pygame.image.load("graphics/Fly/Fly2.png")
 
@@ -50,6 +58,3 @@ class Fly():
         self.fly_index += 0.1
         if int(self.fly_index) == 2: self.fly_index = 0 
         self.surf = self.fly[int(self.fly_index)]
-
-    def draw(self, screen):
-        screen.blit(self.surf, self.rect)
