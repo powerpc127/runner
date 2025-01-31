@@ -28,7 +28,7 @@ def detect_collision(enemy):
         game_active = False
     
 
-def start_screen():
+def start_screen(): # Delete this
     pass
 
 # Logic loop
@@ -79,3 +79,4 @@ while True:
             game_active = True
     pygame.display.update()
     clock.tick(60)
+ 
