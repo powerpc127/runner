@@ -28,7 +28,7 @@ def detect_collision(enemy):
         game_active = False
     
 
-def start_screen(): # Delete this
+def start_screen(): # Delete this (more change for an excuse to commit)
     pass
 
 # Logic loop
