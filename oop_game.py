@@ -74,7 +74,7 @@ while True:
         screen.blit(end.game_over_surf, end.game_over_rect)
         screen.blit(end.player_surf, end.player_rect)
         screen.blit(end.try_again_surf,end.try_again_rect)
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             player.position = [100, FLOOR]
             game_active = True
     pygame.display.update()
