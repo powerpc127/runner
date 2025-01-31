@@ -72,7 +72,6 @@ class Player(pygame.sprite.Sprite):
     def draw(self, screen):
         screen.blit(self.surf, self.rect)
         if self.hitbox: pygame.draw.rect(screen,"Red", self.rect, 2)
-
         
     pygame.display.update()
     clock.tick(60)

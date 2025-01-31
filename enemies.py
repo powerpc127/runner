@@ -25,8 +25,6 @@ class Snail(Enemy):
         self.glide2 = pygame.image.load("graphics/snail/snail2.png")
 
         self.glide = [self.glide1, self.glide2]
-        self.masks = [self.mask1, self.mask2]
-
         
         self.surf = self.glide1
         self.mask = pygame.mask.from_surface(self.surf)
