@@ -4,11 +4,14 @@ from constants import *
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-class Enemy():
+class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y):
+        super().__init__()
         self.position = [x, y]
         self.surf = ""
         self.rect = ""
+        self.mask = ""
+        self.index = 0
 
 
     def draw(self, screen):
@@ -21,22 +24,18 @@ class Snail(Enemy):
         self.glide1 = pygame.image.load("graphics/snail/snail1.png")
         self.glide2 = pygame.image.load("graphics/snail/snail2.png")
 
-        self.mask1 = pygame.mask.from_surface(self.glide1)
-        self.mask2 = pygame.mask.from_surface(self.glide2)
-
         self.glide = [self.glide1, self.glide2]
         self.masks = [self.mask1, self.mask2]
-        self.glide_index = 0
+
         
         self.surf = self.glide1
+        self.mask = pygame.mask.from_surface(self.surf)
         self.rect = self.surf.get_rect(bottomleft = (self.position))
 
     def animate(self):
-        self.glide_index += 0.05
-        if int(self.glide_index) == 2: self.glide_index = 0
-        self.surf = self.glide[int(self.glide_index)]
-        self.mask = self.masks[int(self.glide_index)]
-
+        self.index += 0.05
+        if int(self.index) == 2: self.index = 0
+        self.surf = self.glide[int(self.index)]
 
 class Fly(Enemy):
     def __init__(self, x, y=100):
@@ -44,17 +43,13 @@ class Fly(Enemy):
         self.fly1 = pygame.image.load("graphics/Fly/Fly1.png")
         self.fly2 = pygame.image.load("graphics/Fly/Fly2.png")
 
-        self.mask1 = pygame.mask.from_surface(self.fly1)
-        self.mask2 = pygame.mask.from_surface(self.fly2)
-
         self.fly = [self.fly1, self.fly2]
-        self.masks = [self.mask1, self.mask2]
-        self.fly_index = 0
         
         self.surf = self.fly1
+        self.mask = pygame.mask.from_surface(self.surf)
         self.rect = self.surf.get_rect(bottomleft = (self.position))
 
     def animate(self):
-        self.fly_index += 0.1
-        if int(self.fly_index) == 2: self.fly_index = 0 
-        self.surf = self.fly[int(self.fly_index)]
+        self.index += 0.1
+        if int(self.index) == 2: self.index = 0 
+        self.surf = self.fly[int(self.index)]

@@ -26,6 +26,7 @@ class Player(pygame.sprite.Sprite):
         self.walk_index = 0
 
         self.surf = self.walk1 # Starting surface to override later
+        self.mask = pygame.mask.from_surface(self.surf)
         self.rect = self.surf.get_rect(bottomleft = (self.position)) # Rectangle to blit in draw
 
         self.gravity = 0
@@ -72,8 +73,6 @@ class Player(pygame.sprite.Sprite):
         screen.blit(self.surf, self.rect)
         if self.hitbox: pygame.draw.rect(screen,"Red", self.rect, 2)
 
-    def collide(self):
-        pass
         
     pygame.display.update()
     clock.tick(60)
