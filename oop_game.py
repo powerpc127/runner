@@ -18,13 +18,11 @@ game_active = True
 end = GameOver()
 time = 0
 score = 0
-counter = Counter(score)
 enemies = []
 
 # Timers
 enemy_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(enemy_timer, 1000)
-
 
 # Functions
 def detect_collision(enemy):
@@ -47,6 +45,7 @@ def move_enemy(): # Also increases score, simply easier to do here
             enemy.jumped = True
         if enemy.rect.right < 0:
             enemies.remove(enemy)
+        
 
 def start_screen(): # Delete this (or fill it in?)
     pass
@@ -63,7 +62,9 @@ while True:
         # Drawing everything on screen
         screen.fill((0, 0, 0))
         background.draw(screen)
-        counter.draw(screen)
+        score_surf = small_font.render(f"Score: {score}", False, "Black") # Score surface (put this in classes if feeling saucy, but this is easier)
+        score_rect = score_surf.get_rect(topright = ((SCREEN_WIDTH - 100), 50))
+        screen.blit(score_surf, score_rect)
         player.animate()        
         move_enemy()
         for enemy in enemies:
@@ -94,11 +95,16 @@ while True:
 
     else:
         screen.fill((94,129,162))
+        # Put next two lines into class methods if feeling saucy
+        score_surf = small_font.render(f"Score: {score}", False, (0, 200, 200))
+        score_rect = score_surf.get_rect(center = ((0.5*SCREEN_WIDTH),((13/16)*SCREEN_HEIGHT)))
+        screen.blit(score_surf, score_rect)
         screen.blit(end.game_over_surf, end.game_over_rect)
         screen.blit(end.player_surf, end.player_rect)
         screen.blit(end.try_again_surf,end.try_again_rect)
         if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
             player.position = [100, FLOOR]
+            score = 0
             enemies = []
             game_active = True
     pygame.display.update()
