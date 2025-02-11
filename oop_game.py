@@ -18,8 +18,10 @@ game_active = True
 end = GameOver()
 time = 0
 score = 0
+counter = Counter(score)
 enemies = []
 
+# Timers
 enemy_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(enemy_timer, 1000)
 
@@ -61,6 +63,7 @@ while True:
         # Drawing everything on screen
         screen.fill((0, 0, 0))
         background.draw(screen)
+        counter.draw(screen)
         player.animate()        
         move_enemy()
         for enemy in enemies:

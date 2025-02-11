@@ -28,3 +28,12 @@ class GameOver():
 
         self.try_again_surf = small_font.render("Press return to try again!", False, (0, 200, 200))
         self.try_again_rect = self.try_again_surf.get_rect(center = ((0.5*SCREEN_WIDTH),((3/4)*SCREEN_HEIGHT)))
+
+class Counter():
+    def __init__(self, score):
+        self.score = score
+        self.score_surf = small_font.render(f"Score {score}", False, "Black")
+        self.score_rect = self.score_surf.get_rect(topright = ((SCREEN_WIDTH - 100), 50))
+
+    def draw(self, screen):
+        screen.blit(self.score_surf, self.score_rect)
