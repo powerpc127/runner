@@ -105,8 +105,8 @@ pygame.time.set_timer(snail_animation_timer, 500)
 
 fly_animation_timer = pygame.USEREVENT + 3
 pygame.time.set_timer(fly_animation_timer, 200)
-# Use a while True  loop to keep the game running, otherwise the game will close as soon as you open the program
 
+# Use a while True  loop to keep the game running, otherwise the game will close as soon as you open the program
 while True:
     # Allow for the game to quit
     for event in pygame.event.get(): # get function automatically detects input

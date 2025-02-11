@@ -14,10 +14,6 @@ class Enemy(pygame.sprite.Sprite):
         self.index = 0
 
 
-    def draw(self, screen):
-        screen.blit(self.surf, self.rect)
-
-
 class Snail(Enemy):
     def __init__(self, x, y=FLOOR):
         super().__init__(x, y)
@@ -35,6 +31,9 @@ class Snail(Enemy):
         if int(self.index) == 2: self.index = 0
         self.surf = self.glide[int(self.index)]
 
+    def draw(self, screen):
+            screen.blit(self.surf, self.rect)
+
 class Fly(Enemy):
     def __init__(self, x, y=100):
         super().__init__(x, y)
@@ -51,3 +50,6 @@ class Fly(Enemy):
         self.index += 0.1
         if int(self.index) == 2: self.index = 0 
         self.surf = self.fly[int(self.index)]
+    
+    def draw(self, screen):
+        screen.blit(self.surf, self.rect)

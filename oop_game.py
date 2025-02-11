@@ -13,22 +13,38 @@ pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 player = Player()
-snail = Snail(500,)
-fly = Fly(300, 250)
+snail = Snail(SCREEN_WIDTH - 200,)
+fly = Fly(SCREEN_WIDTH, 250)
 background = Background()
 game_active = True
 end = GameOver()
 time = 0
-enemies = [snail, fly]
+enemies = []
 
 # Functions
 def detect_collision(enemy):
     global game_active
     if pygame.sprite.collide_mask(player, enemy) != None:
         game_active = False
-    
 
-def start_screen(): # Delete this (more change for an excuse to commit)
+def add_enemy(): # TODO
+    global enemies
+    enemies.append(random.randint(0,2))
+    
+def spawn_enemy(): # TODO
+    enemy_timer = pygame.USEREVENT + 1
+    pygame.time.set_timer(enemy_timer, 1000)
+    if event.type == enemy_timer and game_active: print('time')
+
+
+def move_enemy():
+    for enemy in enemies:
+        if type(enemy) == Snail: enemy.rect.left -= 5
+        if type(enemy) == Fly: enemy.rect.left -= 7
+        if enemy.rect.right < 0: enemies.remove(enemy)
+
+
+def start_screen(): # Delete this (more change for an excuse to )
     pass
 
 # Logic loop
@@ -43,6 +59,8 @@ while True:
         screen.fill((0, 0, 0))
         background.draw(screen)
         player.animate()
+        spawn_enemy()
+        move_enemy()
         for enemy in enemies:
             enemy.animate()
             enemy.draw(screen)
@@ -74,8 +92,9 @@ while True:
         screen.blit(end.game_over_surf, end.game_over_rect)
         screen.blit(end.player_surf, end.player_rect)
         screen.blit(end.try_again_surf,end.try_again_rect)
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
             player.position = [100, FLOOR]
+            enemies = []
             game_active = True
     pygame.display.update()
     clock.tick(60)
