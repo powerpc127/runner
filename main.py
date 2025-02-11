@@ -122,7 +122,7 @@ while True:
                     player_rect.y -= 1 # This changes our height by 1 so that we don't meet the criteria for being on the floor and can move
             
             if event.type == obstacle_timer:
-                if randint(0,2):
+                if randint(1,2):
                     obstacle_rect_list.append(snail_surf.get_rect(bottomright = (randint(900, 1100), 300)))
                 else:
                     obstacle_rect_list.append(fly_surf.get_rect(bottomright = (randint(900, 1100), 210)))

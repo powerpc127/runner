@@ -17,6 +17,7 @@ background = Background()
 game_active = True
 end = GameOver()
 time = 0
+score = 0
 enemies = []
 
 enemy_timer = pygame.USEREVENT + 1
@@ -30,19 +31,22 @@ def detect_collision(enemy):
         game_active = False
 
 def add_enemy():
-    global enemies
     key = random.randint(1, 5)
     if key == 1 or key == 2: enemies.append(Snail())
     if key == 3 or key == 4: enemies.append(Fly())
 
-def move_enemy():
+def move_enemy(): # Also increases score, simply easier to do here
+    global score
     for enemy in enemies:
         if type(enemy) == Snail: enemy.rect.left -= 5
         if type(enemy) == Fly: enemy.rect.left -= 6
-        if enemy.rect.right < 0: enemies.remove(enemy)
+        if enemy.rect.right < player.rect.left and enemy.jumped == False:
+            score += 1
+            enemy.jumped = True
+        if enemy.rect.right < 0:
+            enemies.remove(enemy)
 
-
-def start_screen(): # Delete this (more change for an excuse to )
+def start_screen(): # Delete this (or fill it in?)
     pass
 
 # Logic loop
@@ -67,7 +71,7 @@ while True:
         # Collisions
         for enemy in enemies:
             detect_collision(enemy)
-        
+
         # Movement keys
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
